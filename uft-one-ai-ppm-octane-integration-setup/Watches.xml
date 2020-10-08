@@ -1,0 +1,4 @@
+﻿<Properties>
+  <WatchEntry0 value="AIUtil.FindText(&quot;Client ID&quot;, micFromBottom, 1)" />
+  <WatchEntry1 value="AIUtil(&quot;text_box&quot;, micAnyText, micWithAnchorOnTop, TextAnchor).Exist" />
+</Properties>
