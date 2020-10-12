@@ -1,6 +1,7 @@
 ﻿'===========================================================
 '20201008 - Initial creation
 '20201012 - Increased the Exist timeout for synchronization of intially bringing up the Shared Space customization.  Base 20 seconds wasn't enough.
+'20201012 - Replaced regenerate access step and copy step with traditional OR, small resolution screens causing recognition issues
 '===========================================================
 
 Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret
@@ -54,6 +55,7 @@ AppContext.Sync																				'Wait for the browser to stop spinning
 AIUtil.FindText("Default Shared Space").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
 AIUtil.FindTextBlock("Epic").Exist(120)
+AppContext.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
 'BP:  Click the API ACCESS text
@@ -69,13 +71,14 @@ AIUtil.FindTextBlock("ppm").Click
 '===========================================================================================
 'BP:  Click the Regen text 
 '===========================================================================================
-AIUtil.FindText("Regen").Click
+Browser("Browser").Page("Octane Main Page").WebButton("Regenerate access").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
 'BP:  Click the Copy text 
 '===========================================================================================
-AIUtil.FindTextBlock("COPY").Click
+'AIUtil.FindTextBlock("COPY").Click
+Browser("Browser").Page("Octane Main Page").WebButton("Copy").Click
 
 '===========================================================================================
 'BP:  Parse the clipboard to get the client ID and client secret
