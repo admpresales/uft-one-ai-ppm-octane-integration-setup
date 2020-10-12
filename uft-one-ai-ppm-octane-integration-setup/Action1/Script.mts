@@ -3,9 +3,10 @@
 '20201012 - Increased the Exist timeout for synchronization of intially bringing up the Shared Space customization.  Base 20 seconds wasn't enough.
 '20201012 - Replaced regenerate access step and copy step with traditional OR, small resolution screens causing recognition issues
 '20201012 - Replaced PPM Password entry with traditional OR, small resolution screens causing recognition issues
+'20201012 - Updated the click on the Shared Space to have a reattempt, up to 3 tries
 '===========================================================
 
-Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret
+Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret, Counter
 
 While Browser("CreationTime:=0").Exist(0)   												'Loop to close all open browsers
 	Browser("CreationTime:=0").Close 
@@ -53,9 +54,18 @@ AppContext.Sync																				'Wait for the browser to stop spinning
 '===========================================================================================
 'BP:  Click the Default Shared Space text 
 '===========================================================================================
-AIUtil.FindText("Default Shared Space").Click
-AppContext.Sync																				'Wait for the browser to stop spinning
-AIUtil.FindTextBlock("Epic").Exist(120)
+Counter = 0
+Do
+	AIUtil.FindText("Default Shared Space").Click
+	AppContext.Sync																				'Wait for the browser to stop spinning
+	Counter = Counter + 1
+	wait(1)
+	If Counter >=3 Then
+		msgbox("Something is broken, the Epic hasn't shown up")
+		Reporter.ReportEvent micFail, "Click the Default Shared Space text", "The Epic text didn't display within " & Counter & " attempts."
+		Exit Do
+	End If
+Loop Until AIUtil.FindTextBlock("Epic").Exist(120)
 AppContext.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
