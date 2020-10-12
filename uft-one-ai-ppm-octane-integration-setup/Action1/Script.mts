@@ -1,5 +1,6 @@
 ﻿'===========================================================
 '20201008 - Initial creation
+'20201012 - Increased the Exist timeout for synchronization of intially bringing up the Shared Space customization.  Base 20 seconds wasn't enough.
 '===========================================================
 
 Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret
@@ -52,7 +53,7 @@ AppContext.Sync																				'Wait for the browser to stop spinning
 '===========================================================================================
 AIUtil.FindText("Default Shared Space").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
-AIUtil.FindTextBlock("Epic").Exist
+AIUtil.FindTextBlock("Epic").Exist(120)
 
 '===========================================================================================
 'BP:  Click the API ACCESS text
