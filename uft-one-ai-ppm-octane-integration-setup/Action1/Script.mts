@@ -2,6 +2,7 @@
 '20201008 - Initial creation
 '20201012 - Increased the Exist timeout for synchronization of intially bringing up the Shared Space customization.  Base 20 seconds wasn't enough.
 '20201012 - Replaced regenerate access step and copy step with traditional OR, small resolution screens causing recognition issues
+'20201012 - Replaced PPM Password entry with traditional OR, small resolution screens causing recognition issues
 '===========================================================
 
 Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret
@@ -122,7 +123,7 @@ AppContext.Sync																				'Wait for the browser to stop spinning
 'BP:  Log into PPM with admin privileges
 '===========================================================================================
 AIUtil("input", "Usemame").Type DataTable.Value("PPMUserID")
-AIUtil("input", "Password").Type DataTable.Value("PPMPassword")
+Browser("Browser").Page("PPM Logon").WebEdit("PASSWORD").Set DataTable.Value("PPMPassword")
 AIUtil("button", "Sign-In").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
 
