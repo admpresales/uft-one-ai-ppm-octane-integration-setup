@@ -4,6 +4,7 @@
 '20201012 - Replaced regenerate access step and copy step with traditional OR, small resolution screens causing recognition issues
 '20201012 - Replaced PPM Password entry with traditional OR, small resolution screens causing recognition issues
 '20201012 - Updated the click on the Shared Space to have a reattempt, up to 3 tries
+'20201014 - Added logic to handle if the sa@nga Octane user is brought into Settings upon login instead of as a normal user.
 '===========================================================
 
 Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret, Counter
@@ -43,6 +44,14 @@ End If
 '===========================================================================================
 'BP:  Click the settings icon, AI not recognizing, feedback submitted
 '===========================================================================================
+If Browser("Browser").Page("Octane Main Page").WebElement("Return to Main Application").Exist(1) Then
+	'===========================================================================================
+	'BP:  Click the return to main application icon, non-standard visual element, AI not an option
+	'===========================================================================================
+	Browser("Browser").Page("Octane Main Page").WebElement("Return to Main Application").Click
+	AppContext.Sync																				'Wait for the browser to stop spinning
+End If
+
 Browser("Browser").Page("Octane Main Page").WebElement("Settings Icon").Click
 
 '===========================================================================================
