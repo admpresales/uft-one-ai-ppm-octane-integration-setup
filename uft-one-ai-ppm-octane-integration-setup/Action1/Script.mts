@@ -5,6 +5,7 @@
 '20201012 - Replaced PPM Password entry with traditional OR, small resolution screens causing recognition issues
 '20201012 - Updated the click on the Shared Space to have a reattempt, up to 3 tries
 '20201014 - Added logic to handle if the sa@nga Octane user is brought into Settings upon login instead of as a normal user.
+'20201015 - Corrected logic failure where failure occurs, but reporter event was set to micPass
 '===========================================================
 
 Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret, Counter
@@ -38,7 +39,7 @@ AppContext.Sync																				'Wait for the browser to stop spinning
 if AIUtil("search").Exist(60) Then
 	Reporter.ReportEvent micPass, "Log into Octane", "The search icon displayed within 60 seconds"
 Else
-	Reporter.ReportEvent micPass, "Log into Octane", "The search icon did not display within 60 seconds"
+	Reporter.ReportEvent micFail, "Log into Octane", "The search icon did not display within 60 seconds"
 End If
 
 '===========================================================================================
