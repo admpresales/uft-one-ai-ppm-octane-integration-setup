@@ -6,9 +6,10 @@
 '20201012 - Updated the click on the Shared Space to have a reattempt, up to 3 tries
 '20201014 - Added logic to handle if the sa@nga Octane user is brought into Settings upon login instead of as a normal user.
 '20201015 - Corrected logic failure where failure occurs, but reporter event was set to micPass
+'20201020 - DJ: Updated to handle changes coming in UFT One 15.0.2
 '===========================================================
 
-Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret, Counter
+Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret, Counter, rc
 
 While Browser("CreationTime:=0").Exist(0)   												'Loop to close all open browsers
 	Browser("CreationTime:=0").Close 
@@ -131,7 +132,7 @@ Browser("Browser").Page("Octane Main Page").Image("user avatar").Click
 '===========================================================================================
 AIUtil("button", "Logout").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
-AIUtil("input", "Password").Exist
+rc = AIUtil("input", "Password").Exist
 
 '===========================================================================================
 'BP:  Navigate to the PPM login page
@@ -218,6 +219,6 @@ Browser("Browser").Page("Integration Configurations").WebElement("User Icon").Cl
 '===========================================================================================
 AIUtil.FindText("Sign Out").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
-AIUtil("button", "Sign-In").Exist
+rc = AIUtil("button", "Sign-In").Exist
 
 AppContext.Close
