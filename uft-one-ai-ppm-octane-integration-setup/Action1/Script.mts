@@ -7,6 +7,7 @@
 '20201014 - Added logic to handle if the sa@nga Octane user is brought into Settings upon login instead of as a normal user.
 '20201015 - Corrected logic failure where failure occurs, but reporter event was set to micPass
 '20201020 - DJ: Updated to handle changes coming in UFT One 15.0.2
+'20201120 - DJ: Increased the timeout for bringing up the Shared Space configuration to be 300 seconds instead of 120 seconds.
 '===========================================================
 
 Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret, Counter, rc
@@ -76,7 +77,7 @@ Do
 		Reporter.ReportEvent micFail, "Click the Default Shared Space text", "The Epic text didn't display within " & Counter & " attempts."
 		Exit Do
 	End If
-Loop Until AIUtil.FindTextBlock("Epic").Exist(120)
+Loop Until AIUtil.FindTextBlock("Epic").Exist(300)
 AppContext.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
