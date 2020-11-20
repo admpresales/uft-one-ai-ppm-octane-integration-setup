@@ -8,6 +8,7 @@
 '20201015 - Corrected logic failure where failure occurs, but reporter event was set to micPass
 '20201020 - DJ: Updated to handle changes coming in UFT One 15.0.2
 '20201120 - DJ: Increased the timeout for bringing up the Shared Space configuration to be 300 seconds instead of 120 seconds.
+'20201120 - DJ: Commented out the msgbox command which can cause problems with a script being executed from Jenkins
 '===========================================================
 
 Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret, Counter, rc
@@ -73,7 +74,7 @@ Do
 	Counter = Counter + 1
 	wait(1)
 	If Counter >=3 Then
-		msgbox("Something is broken, the Epic hasn't shown up")
+		'msgbox("Something is broken, the Epic hasn't shown up")
 		Reporter.ReportEvent micFail, "Click the Default Shared Space text", "The Epic text didn't display within " & Counter & " attempts."
 		Exit Do
 	End If
