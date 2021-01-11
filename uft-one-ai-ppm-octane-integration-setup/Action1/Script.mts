@@ -9,6 +9,9 @@
 '20201020 - DJ: Updated to handle changes coming in UFT One 15.0.2
 '20201120 - DJ: Increased the timeout for bringing up the Shared Space configuration to be 300 seconds instead of 120 seconds.
 '20201120 - DJ: Commented out the msgbox command which can cause problems with a script being executed from Jenkins
+'20210111 - DJ: The traditional OR of the settings and return to application icon needed to be updated due to changes in Octane.  Updated these
+'				statements to be AI statements (15.0.2 now recognizes them correctly).  GREAT example of when to transition a traditional OR statement
+'				to be an AI statement, script was broken due to an application change.
 '===========================================================
 
 Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret, Counter, rc
@@ -56,7 +59,8 @@ If Browser("Browser").Page("Octane Main Page").WebElement("Return to Main Applic
 	AppContext.Sync																				'Wait for the browser to stop spinning
 End If
 
-Browser("Browser").Page("Octane Main Page").WebElement("Settings Icon").Click
+AIUtil("gear_settings", micAnyText, micFromTop, 1).Click
+'Browser("Browser").Page("Octane Main Page").WebElement("Settings Icon").Click
 
 '===========================================================================================
 'BP:  Click the Spaces text in the drop down menu
@@ -121,7 +125,8 @@ AIUtil.FindTextBlock("0K").Click
 '===========================================================================================
 'BP:  Click the return to main application icon, non-standard visual element, AI not an option
 '===========================================================================================
-Browser("Browser").Page("Octane Main Page").WebElement("Return to Main Application").Click
+AIUtil("gear_settings").Click
+'Browser("Browser").Page("Octane Main Page").WebElement("Return to Main Application").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
@@ -224,3 +229,5 @@ AppContext.Sync																				'Wait for the browser to stop spinning
 rc = AIUtil("button", "Sign-In").Exist
 
 AppContext.Close
+
+
