@@ -12,9 +12,14 @@
 '20210111 - DJ: The traditional OR of the settings and return to application icon needed to be updated due to changes in Octane.  Updated these
 '				statements to be AI statements (15.0.2 now recognizes them correctly).  GREAT example of when to transition a traditional OR statement
 '				to be an AI statement, script was broken due to an application change.
+'20210209 - DJ: Updated to start the mediaserver service on the UFT One host machine if it isn't running
 '===========================================================
 
-Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret, Counter, rc
+Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret, Counter, rc, oShell
+
+Set oShell = CreateObject ("WSCript.shell")
+oShell.run "powershell -command ""Start-Service mediaserver"""
+Set oShell = Nothing
 
 While Browser("CreationTime:=0").Exist(0)   												'Loop to close all open browsers
 	Browser("CreationTime:=0").Close 
