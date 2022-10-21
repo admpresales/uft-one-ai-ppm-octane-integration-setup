@@ -13,6 +13,8 @@
 '				statements to be AI statements (15.0.2 now recognizes them correctly).  GREAT example of when to transition a traditional OR statement
 '				to be an AI statement, script was broken due to an application change.
 '20210209 - DJ: Updated to start the mediaserver service on the UFT One host machine if it isn't running
+'20221021 - DJ: Updated because the text for the shared space changed, plus converted some statements that were properties-based to AI with enhancements to the AI engine.
+'				Now the entire script is AI, no properties-based statements.
 '===========================================================
 
 Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret, Counter, rc, oShell
@@ -41,9 +43,7 @@ AIUtil.SetContext AppContext																'Tell the AI engine to point at the 
 '===========================================================================================
 'BP:  Log into Octane
 '===========================================================================================
-'AIUtil("input", "Name").Type DataTable.Value("OctaneUserID")
-'	Had to replace with traditional OR statement because sometimes the Octane form has the user ID pre-set
-Browser("Browser").Page("Login").WebEdit("Name Field").Set DataTable.Value("OctaneUserID")
+AIUtil("input", "Name").SetText DataTable.Value("OctaneUserID")
 AIUtil("input", "Password").Type DataTable.Value("OctanePassword")
 AIUtil("button", "Login").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
@@ -56,16 +56,15 @@ End If
 '===========================================================================================
 'BP:  Click the settings icon, AI not recognizing, feedback submitted
 '===========================================================================================
-If Browser("Browser").Page("Octane Main Page").WebElement("Return to Main Application").Exist(1) Then
+If AIUtil.FindTextBlock("SETTINGS").Exist(1) Then
 	'===========================================================================================
 	'BP:  Click the return to main application icon, non-standard visual element, AI not an option
 	'===========================================================================================
-	Browser("Browser").Page("Octane Main Page").WebElement("Return to Main Application").Click
+	AIUtil("gear_settings", micAnyText, micFromTop, 1).Click
 	AppContext.Sync																				'Wait for the browser to stop spinning
 End If
 
 AIUtil("gear_settings", micAnyText, micFromTop, 1).Click
-'Browser("Browser").Page("Octane Main Page").WebElement("Settings Icon").Click
 
 '===========================================================================================
 'BP:  Click the Spaces text in the drop down menu
@@ -78,13 +77,13 @@ AppContext.Sync																				'Wait for the browser to stop spinning
 '===========================================================================================
 Counter = 0
 Do
-	AIUtil.FindText("Default Shared Space").Click
+	AIUtil.FindText("Default Shared Workspace").Click
 	AppContext.Sync																				'Wait for the browser to stop spinning
 	Counter = Counter + 1
 	wait(1)
 	If Counter >=3 Then
 		'msgbox("Something is broken, the Epic hasn't shown up")
-		Reporter.ReportEvent micFail, "Click the Default Shared Space text", "The Epic text didn't display within " & Counter & " attempts."
+		Reporter.ReportEvent micFail, "Click the Default Shared Workspace text", "The Epic text didn't display within " & Counter & " attempts."
 		Exit Do
 	End If
 Loop Until AIUtil.FindTextBlock("Epic").Exist(300)
@@ -104,14 +103,13 @@ AIUtil.FindTextBlock("ppm").Click
 '===========================================================================================
 'BP:  Click the Regen text 
 '===========================================================================================
-Browser("Browser").Page("Octane Main Page").WebButton("Regenerate access").Click
+AIUtil("document").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
 'BP:  Click the Copy text 
 '===========================================================================================
-'AIUtil.FindTextBlock("COPY").Click
-Browser("Browser").Page("Octane Main Page").WebButton("Copy").Click
+AIUtil.FindTextBlock("Copy").Click
 
 '===========================================================================================
 'BP:  Parse the clipboard to get the client ID and client secret
@@ -131,13 +129,12 @@ AIUtil.FindTextBlock("0K").Click
 'BP:  Click the return to main application icon, non-standard visual element, AI not an option
 '===========================================================================================
 AIUtil("gear_settings").Click
-'Browser("Browser").Page("Octane Main Page").WebElement("Return to Main Application").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
 'BP:  Click the user avatar icon, non-standard visual element, AI not an option
 '===========================================================================================
-Browser("Browser").Page("Octane Main Page").Image("user avatar").Click
+AIUtil("button", micAnyText, micWithAnchorOnLeft, AIUtil("down_triangle")).Click
 
 '===========================================================================================
 'BP:  Click the Logout button
@@ -156,7 +153,7 @@ AppContext.Sync																				'Wait for the browser to stop spinning
 'BP:  Log into PPM with admin privileges
 '===========================================================================================
 AIUtil("input", "Usemame").Type DataTable.Value("PPMUserID")
-Browser("Browser").Page("PPM Logon").WebEdit("PASSWORD").Set DataTable.Value("PPMPassword")
+AIUtil("input", micAnyText, micWithAnchorOnLeft, AIUtil.FindTextBlock("Password")).Type DataTable.Value("PPMPassword")
 AIUtil("button", "Sign-In").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
 
@@ -186,17 +183,17 @@ AppContext.Sync																				'Wait for the browser to stop spinning
 '===========================================================================================
 'BP:  Enter the Client ID into the Client ID field.  Using traditional OR as the OCR is recognizing extra characters for the label
 '===========================================================================================
-Browser("Browser").Page("Integration Configurations").WebEdit("clientId").Set ParsedClientID
+AIUtil("text_box", "Client ID").SetText ParsedClientID
 
 '===========================================================================================
 'BP:  Enter the Client Secret into the Client Secret field.  Using traditional OR as the OCR is recognizing extra characters for the label and need to clear the value first
 '===========================================================================================
-Browser("Browser").Page("Integration Configurations").WebEdit("clientSecret").Set ParsedClientSecret
+AIUtil("text_box", "Client Secret").SetText ParsedClientSecret
 
 '===========================================================================================
 'BP:  Click the Save button
 '===========================================================================================
-Browser("Browser").Page("Integration Configurations").WebButton("Save").Click
+AIUtil("button", "SAVE").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
@@ -219,12 +216,13 @@ End If
 '===========================================================================================
 'BP:  Click the Cancel text
 '===========================================================================================
-AIUtil.FindText("CANCEL").Click
+AIUtil("button", "CANCEL", micFromTop, 1).Click
+'AIUtil.FindText("CANCEL").Click (In UFT 2022, the underlying cancel button is also being recognized, so had to change to first from top)
 
 '===========================================================================================
 'BP:  CLick the profile icon
 '===========================================================================================
-Browser("Browser").Page("Integration Configurations").WebElement("User Icon").Click
+AIUtil("profile", micAnyText, micFromTop, 1).Click
 
 '===========================================================================================
 'BP:  CLick the Sign Out text
