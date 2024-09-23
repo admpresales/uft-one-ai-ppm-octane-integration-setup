@@ -15,6 +15,7 @@
 '20210209 - DJ: Updated to start the mediaserver service on the UFT One host machine if it isn't running
 '20221021 - DJ: Updated because the text for the shared space changed, plus converted some statements that were properties-based to AI with enhancements to the AI engine.
 '				Now the entire script is AI, no properties-based statements.
+'20240923 - DJ: Updated to handle changes in Octane, labels and flow have changed.
 '===========================================================
 
 Dim BrowserExecutable, ParsedClipboard, ParsedClientID, ParsedClientSecret, Counter, rc, oShell
@@ -86,13 +87,14 @@ Do
 		Reporter.ReportEvent micFail, "Click the Default Shared Workspace text", "The Epic text didn't display within " & Counter & " attempts."
 		Exit Do
 	End If
-Loop Until AIUtil.FindTextBlock("Epic").Exist(300)
+'DJ20240923  After clicking on the Default Shared Workspace you now are taken to the Email screen instead of the Epics screen, changing FindTextBlock
+Loop Until AIUtil.FindTextBlock("API Access", micWithAnchorOnRight, AIUtil.FindTextBlock("Parameters")).Exist(300)
 AppContext.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
 'BP:  Click the API ACCESS text
 '===========================================================================================
-AIUtil.FindText("API ACCESS").Click
+AIUtil.FindTextBlock("API Access", micWithAnchorOnRight, AIUtil.FindTextBlock("Parameters")).Click
 AppContext.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
@@ -102,8 +104,10 @@ AIUtil.FindTextBlock("ppm").Click
 
 '===========================================================================================
 'BP:  Click the Regen text 
+'DJ20240923  There are now two "document" class objects, changing to anchor off of regenerate
 '===========================================================================================
-AIUtil("document").Click
+
+AIUtil("document", micAnyText, micWithAnchorBelow, AIUtil.FindTextBlock("Regenerate access")).Click
 AppContext.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
@@ -139,7 +143,7 @@ AIUtil("button", micAnyText, micWithAnchorOnLeft, AIUtil("down_triangle")).Click
 '===========================================================================================
 'BP:  Click the Logout button
 '===========================================================================================
-AIUtil("button", "Logout").Click
+AIUtil("button", "Sign out").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
 rc = AIUtil("input", "Password").Exist
 
@@ -197,9 +201,16 @@ AIUtil("button", "SAVE").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
-'BP:  Click Advanced text
+'BP:  Click the "OK" button
 '===========================================================================================
-AIUtil.FindTextBlock("Advanced").Click
+AIUtil("button", "OK").Click
+AppContext.Sync																				'Wait for the browser to stop spinning
+
+'===========================================================================================
+'BP:  Click Advanced text
+'DJ20240923  Now click the "Portfolio Epic / Agile Data"
+'===========================================================================================
+AIUtil.FindTextBlock("Portfolio Epic / Agile Data").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
